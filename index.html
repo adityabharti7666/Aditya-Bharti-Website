@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoomFinder - Room Rental Website</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#f4f7fb;color:#333}
+nav{background:#1e3a8a;color:#fff;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+nav h2{font-size:25px} nav ul{display:flex;list-style:none;gap:25px}
+nav a{color:#fff;text-decoration:none;font-weight:bold} nav a:hover{color:#facc15}
+.hero{min-height:420px;background:linear-gradient(rgba(30,58,138,.85),rgba(30,58,138,.85)),url("https://images.unsplash.com/photo-1522708323590-d24dbb6b0267") center/cover;display:flex;justify-content:center;align-items:center;text-align:center;color:#fff;padding:30px}
+.hero h1{font-size:45px;margin-bottom:15px}.hero p{font-size:19px;margin-bottom:25px}
+.search-box{background:#fff;padding:15px;border-radius:10px;max-width:800px;margin:auto;display:flex;gap:10px;flex-wrap:wrap}
+.search-box input,.search-box select{padding:13px;border:1px solid #ccc;border-radius:6px;flex:1;min-width:180px}
+.search-box button{background:#f59e0b;color:#fff;border:0;padding:13px 25px;border-radius:6px;cursor:pointer;font-weight:bold}
+section{padding:55px 7%}.section-title{text-align:center;margin-bottom:35px}.section-title h2{font-size:32px;color:#1e3a8a;margin-bottom:10px}
+.rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px}
+.room-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 15px #0000001a;transition:.3s}
+.room-card:hover{transform:translateY(-7px);box-shadow:0 8px 25px #00000026}.room-card img{width:100%;height:200px;object-fit:cover}
+.room-info{padding:20px}.room-info h3{color:#1e3a8a;margin-bottom:10px}.room-info p{margin:8px 0}
+.price{color:#16a34a;font-size:20px;font-weight:bold}.facilities{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.facility{background:#e0e7ff;color:#1e3a8a;padding:5px 9px;border-radius:5px;font-size:13px}
+.contact-btn,.submit-btn{width:100%;padding:11px;background:#1e3a8a;color:#fff;border:0;border-radius:6px;cursor:pointer;font-size:15px}
+.contact-btn:hover,.submit-btn:hover{background:#172554}
+.facility-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px}
+.facility-box{background:#fff;text-align:center;padding:30px 15px;border-radius:10px;box-shadow:0 3px 12px #00000014}.facility-box .icon{font-size:40px;margin-bottom:10px}.facility-box h3{color:#1e3a8a}
+.location{background:#eaf0ff}.location-content{text-align:center;max-width:700px;margin:auto}.location-content p{font-size:18px;line-height:1.7}
+.contact{background:#fff}.contact-form{max-width:650px;margin:auto}.contact-form input,.contact-form textarea{width:100%;padding:13px;margin-bottom:15px;border:1px solid #ccc;border-radius:6px}
+.contact-form textarea{height:130px;resize:none}footer{background:#172554;color:#fff;text-align:center;padding:25px}
+#noResults{display:none;text-align:center;color:#dc2626;font-size:18px;margin-top:25px}
+@media(max-width:700px){nav{flex-direction:column;gap:15px}nav ul{gap:12px;flex-wrap:wrap;justify-content:center}.hero h1{font-size:32px}.search-box{flex-direction:column}}
+</style>
+</head>
+<body>
+<nav>
+<h2>🏠 RoomFinder</h2>
+<ul>
+<li><a href="#home">Home</a></li><li><a href="#rooms">Rooms</a></li><li><a href="#facilities">Facilities</a></li><li><a href="#location">Location</a></li><li><a href="#contact">Contact</a></li>
+</ul>
+</nav>
+
+<section class="hero" id="home">
+<div>
+<h1>Find Your Perfect Room</h1>
+<p>Affordable rooms, great locations and useful facilities.</p>
+<div class="search-box">
+<input type="text" id="locationSearch" placeholder="Enter location...">
+<select id="roomType"><option value="all">All Room Types</option><option value="Single">Single Room</option><option value="Double">Double Room</option><option value="PG">PG</option></select>
+<select id="priceFilter"><option value="all">Any Rent</option><option value="5000">Below ₹5,000</option><option value="8000">Below ₹8,000</option><option value="10000">Below ₹10,000</option></select>
+<button onclick="searchRooms()">Search</button>
+</div>
+</div>
+</section>
+
+<section id="rooms">
+<div class="section-title"><h2>Available Rooms</h2><p>Choose a room according to your requirements.</p></div>
+<div class="rooms" id="roomContainer">
+
+<div class="room-card" data-location="ahmednagar" data-type="Single" data-price="4500">
+<img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" alt="Single Room">
+<div class="room-info"><h3>Single Room</h3><p>📍 Savedi, Ahmednagar</p><p class="price">₹4,500 / Month</p>
+<div class="facilities"><span class="facility">Wi-Fi</span><span class="facility">Parking</span><span class="facility">Water</span></div>
+<button class="contact-btn" onclick="showContact('Single Room')">Contact Owner</button></div>
+</div>
+
+<div class="room-card" data-location="ahmednagar" data-type="Double" data-price="7000">
+<img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a" alt="Double Room">
+<div class="room-info"><h3>Double Sharing Room</h3><p>📍 Maliwada, Ahmednagar</p><p class="price">₹7,000 / Month</p>
+<div class="facilities"><span class="facility">Wi-Fi</span><span class="facility">AC</span><span class="facility">Attached Bathroom</span></div>
+<button class="contact-btn" onclick="showContact('Double Sharing Room')">Contact Owner</button></div>
+</div>
+
+<div class="room-card" data-location="rahuri" data-type="PG" data-price="5500">
+<img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36" alt="PG Room">
+<div class="room-info"><h3>Student PG</h3><p>📍 Rahuri, Maharashtra</p><p class="price">₹5,500 / Month</p>
+<div class="facilities"><span class="facility">Food</span><span class="facility">Wi-Fi</span><span class="facility">Laundry</span></div>
+<button class="contact-btn" onclick="showContact('Student PG')">Contact Owner</button></div>
+</div>
+
+<div class="room-card" data-location="pune" data-type="Single" data-price="9000">
+<img src="https://images.unsplash.com/photo-1560185008-b033106af5c3" alt="Room in Pune">
+<div class="room-info"><h3>Premium Single Room</h3><p>📍 Pune, Maharashtra</p><p class="price">₹9,000 / Month</p>
+<div class="facilities"><span class="facility">AC</span><span class="facility">Wi-Fi</span><span class="facility">Parking</span></div>
+<button class="contact-btn" onclick="showContact('Premium Single Room')">Contact Owner</button></div>
+</div>
+
+</div>
+<p id="noResults">❌ No rooms found. Try another search.</p>
+</section>
+
+<section id="facilities">
+<div class="section-title"><h2>Our Facilities</h2><p>Facilities available in selected rooms.</p></div>
+<div class="facility-container">
+<div class="facility-box"><div class="icon">📶</div><h3>Free Wi-Fi</h3><p>High-speed internet.</p></div>
+<div class="facility-box"><div class="icon">🚗</div><h3>Parking</h3><p>Safe parking space.</p></div>
+<div class="facility-box"><div class="icon">🍱</div><h3>Food</h3><p>Healthy food facility.</p></div>
+<div class="facility-box"><div class="icon">💧</div><h3>Water</h3><p>24-hour water supply.</p></div>
+<div class="facility-box"><div class="icon">🧺</div><h3>Laundry</h3><p>Laundry facility available.</p></div>
+<div class="facility-box"><div class="icon">❄️</div><h3>AC</h3><p>Air-conditioned rooms.</p></div>
+</div>
+</section>
+
+<section class="location" id="location">
+<div class="section-title"><h2>Our Locations</h2></div>
+<div class="location-content"><p>📍 We provide rooms in convenient locations near colleges, offices, markets and public transport.</p><br><p><b>Available Locations:</b> Ahmednagar | Rahuri | Pune</p></div>
+</section>
+
+<section class="contact" id="contact">
+<div class="section-title"><h2>Contact Us</h2><p>Send us your requirements.</p></div>
+<div class="contact-form">
+<input type="text" id="name" placeholder="Enter your name">
+<input type="email" id="email" placeholder="Enter your email">
+<input type="tel" id="phone" placeholder="Enter your phone number">
+<textarea id="message" placeholder="Enter your message..."></textarea>
+<button class="submit-btn" onclick="submitForm()">Send Message</button>
+</div>
+</section>
+
+<footer><p>© 2026 RoomFinder | Room Rental Website</p><p>Email: roomfinder@gmail.com | Phone: +91 98765 43210</p></footer>
+
+<script>
+function searchRooms(){
+let location=document.getElementById("locationSearch").value.toLowerCase();
+let type=document.getElementById("roomType").value;
+let maxPrice=document.getElementById("priceFilter").value;
+let rooms=document.querySelectorAll(".room-card");
+let found=0;
+rooms.forEach(function(room){
+let roomLocation=room.getAttribute("data-location");
+let roomType=room.getAttribute("data-type");
+let roomPrice=parseInt(room.getAttribute("data-price"));
+let locationMatch=location===""||roomLocation.includes(location);
+let typeMatch=type==="all"||roomType===type;
+let priceMatch=maxPrice==="all"||roomPrice<=parseInt(maxPrice);
+if(locationMatch&&typeMatch&&priceMatch){room.style.display="block";found++}
+else{room.style.display="none"}
+});
+document.getElementById("noResults").style.display=found===0?"block":"none";
+}
+function showContact(roomName){
+alert("You selected: "+roomName+"\n\nContact Owner: +91 98765 43210");
+}
+function submitForm(){
+let name=document.getElementById("name").value;
+let email=document.getElementById("email").value;
+let phone=document.getElementById("phone").value;
+let message=document.getElementById("message").value;
+if(name===""||email===""||phone===""||message===""){alert("Please fill all fields.");return}
+alert("Thank you "+name+"! Your message has been submitted.");
+document.getElementById("name").value="";
+document.getElementById("email").value="";
+document.getElementById("phone").value="";
+document.getElementById("message").value="";
+}
+</script>
+</body>
+</html>
